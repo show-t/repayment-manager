@@ -3,17 +3,38 @@
      <v-card>
       <v-card-title>立替金支払い請求フォーム</v-card-title>
       <v-card-text>
-        <p>立替日</p>
-        <v-text-field
-          v-model="text1"
-          label=""
-          outlined
-          required
-        >
-        </v-text-field>
+        <p>立替日</p>   
+        <v-menu>
+            <template v-slot:activator={on}>
+                <v-text-field
+                    v-on="on"
+                    readonly
+                    v-model="reqData.date"
+                    label=""
+                    outlined
+                    required
+                >
+                </v-text-field>
+            </template>
+            <v-date-picker
+                v-model="reqData.date"
+                no-title
+                scrollable
+            >
+                <v-spacer></v-spacer>
+                <v-btn
+                    text
+                    color="primary"
+                >
+                Cancel
+                </v-btn>
+            </v-date-picker>
+        </v-menu>
+        
+        
         <p>内容</p>
         <v-text-field
-          v-model="text1"
+          v-model="reqData.contents"
           label=""
           outlined
           required
@@ -21,22 +42,23 @@
         </v-text-field>
         <p>立替者</p>
         <v-select
-          :items="items"
-          label=""
-          outlined
+            v-model="reqData.repayer"
+            :items="users"
+            label=""
+            outlined
         ></v-select>
         <p>対象者</p>
         <v-select
-            v-model="value"
-            :items="items"
+            v-model="reqData.targets"
+            :items="users"
             chips
             label=""
             multiple
             outlined
           ></v-select>
-        <p>金額</p>
+        <p>金額 (※単価を記入)</p>
         <v-text-field
-          v-model="text1"
+          v-model="reqData.amount"
           label=""
           outlined
           required
@@ -44,10 +66,11 @@
         </v-text-field>
         <p>備考</p>
         <v-textarea
-          solo
-          name="input-7-4"
-          label=""
-          outlined
+            v-model="reqData.remark"    
+            solo
+            name="input-7-4"
+            label=""
+            outlined
         ></v-textarea>
       </v-card-text>
       <v-divider></v-divider>
@@ -58,3 +81,29 @@
     </v-card>
     </v-app>
 </template>
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
+    data:function(){
+        return{
+            reqData:{
+                date:"",
+                contents:"",
+                repayer:"",
+                targets:[],
+                amount:"",
+                remark:""
+            },
+            users:['H.N.','show-t','GungYam']
+        }
+    },
+    methods:{
+        submit:function(){
+
+        }
+    },
+    created(){
+        
+    }
+})
+</script>
