@@ -84,7 +84,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 export default Vue.extend({
-    data:function(){
+    data(){
         return{
             reqData:{
                 date:"",
@@ -100,10 +100,21 @@ export default Vue.extend({
     },
     methods:{
         submit:function(){
-
+            var body:string = JSON.stringify(this.reqData)
+            var params ={headers:{'Content-Type':'text/plain'}}
+            axios.post(this.endpoint,body,params)
+                .then(res=>{
+                    console.log(res)
+                })
+                .catch(err=>{
+                    console.log(err)
+                })
         }
     },
     mounted(){
+        const params = {
+            crossDomain: true
+        }
         axios.get(this.endpoint)
             .then(res=>this.users = res.data.users)
     }
