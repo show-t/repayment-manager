@@ -81,9 +81,10 @@
     </v-app>
 </template>
 <script lang="ts">
+import Vue from 'vue'
 import axios from 'axios'
-export default{
-    data(){
+export default Vue.extend({
+    data:function(){
         return{
             reqData:{
                 date:"",
@@ -106,5 +107,5 @@ export default{
         axios.get(this.endpoint)
             .then(res=>this.users = res.data.users)
     }
-}
+})
 </script>
