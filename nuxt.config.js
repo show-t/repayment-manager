@@ -80,5 +80,10 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+  publicRuntimeConfig: {
+    GAS_ENDPOINT: process.env.VUE_APP_GAS_ENDPOINT
+  },
+  privateRuntimeConfig: {
   }
 }

@@ -67,7 +67,6 @@
         <p>備考</p>
         <v-textarea
             v-model="reqData.remark"    
-            solo
             name="input-7-4"
             label=""
             outlined
@@ -82,9 +81,9 @@
     </v-app>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-export default Vue.extend({
-    data:function(){
+import axios from 'axios'
+export default{
+    data(){
         return{
             reqData:{
                 date:"",
@@ -94,7 +93,8 @@ export default Vue.extend({
                 amount:"",
                 remark:""
             },
-            users:['H.N.','show-t','GungYam']
+            users:[],
+            endpoint: "https://script.google.com/macros/s/AKfycbzLSPfDaJBd85eoTZpptb3ceUvp34VQj_Y7nC7vNurczRiX7J3TR9AgabNQHoUIJKSr/exec"
         }
     },
     methods:{
@@ -102,8 +102,9 @@ export default Vue.extend({
 
         }
     },
-    created(){
-        
+    mounted(){
+        axios.get(this.endpoint)
+            .then(res=>this.users = res.data.users)
     }
-})
+}
 </script>
