@@ -91,7 +91,7 @@
                         </v-card-title>
                         <v-card-text>
                             <v-container>
-                                <p>以下の内容で送信します</p>
+                                <v-row><v-col>以下の内容で送信します</v-col></v-row>
                             </v-container>
                             <v-container>
                                 <v-row><v-col>【立替日】</v-col><v-col>{{reqData.date}}</v-col></v-row>
@@ -126,10 +126,15 @@
             <v-dialog v-model="dialogSuccess">
                 <v-card>
                         <v-card-title class="text-h5 grey lighten-2">
-                            送信完了
+                            登録完了
                         </v-card-title>
                         <v-card-text>
-                            送信完了しました。
+                            <v-container>
+                                <v-row><v-col>{{resData.ids.length}}件登録しました</v-col></v-row>
+                            </v-container>
+                            <v-container>
+                                <v-row v-for="id in resData.ids" :key="id"><v-col>{{id}}</v-col></v-row>
+                            </v-container>
                         </v-card-text>
                         <v-divider></v-divider>
                         <v-card-actions>
@@ -161,6 +166,9 @@ export default Vue.extend({
                 amount:"",
                 remark:""
             },
+            resData:{
+                ids:[],
+            },
             users:[],
             endpoint: "https://script.google.com/macros/s/AKfycbzLSPfDaJBd85eoTZpptb3ceUvp34VQj_Y7nC7vNurczRiX7J3TR9AgabNQHoUIJKSr/exec",
             dialogConfirm: false,
@@ -178,7 +186,8 @@ export default Vue.extend({
             var params ={headers:{'Content-Type':'text/plain'}}
             axios.post(this.endpoint,body,params)
                 .then(res=>{
-                    console.log(res)
+                    console.log(res.data)
+                    this.resData.ids = res.data
                     this.dialogSuccess = true
                     this.clearReqData()
                 })
