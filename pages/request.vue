@@ -8,6 +8,7 @@
                     <v-menu>
                         <template v-slot:activator={on}>
                             <v-text-field
+                                prepend-inner-icon="mdi-calendar-range"
                                 v-on="on"
                                 readonly
                                 v-model="reqData.date"
@@ -32,19 +33,19 @@
                             </v-btn>
                         </v-date-picker>
                     </v-menu>
-                    
-                    
                     <p>内容</p>
                     <v-text-field
-                    v-model="reqData.contents"
-                    :rules="[rules.required]"
-                    label=""
-                    outlined
-                    required
+                        prepend-inner-icon="mdi-subtitles"
+                        v-model="reqData.contents"
+                        :rules="[rules.required]"
+                        label=""
+                        outlined
+                        required
                     >
                     </v-text-field>
                     <p>立替者</p>
                     <v-select
+                        prepend-inner-icon="mdi-account-cash"
                         v-model="reqData.repayer"
                         :items="users"
                         :rules="[rules.required]"
@@ -53,6 +54,7 @@
                     ></v-select>
                     <p>対象者</p>
                     <v-select
+                        prepend-inner-icon="mdi-account-arrow-right"
                         v-model="reqData.targets"
                         :items="users"
                         :rules="[rules.required,rules.counter]"
@@ -63,16 +65,17 @@
                     ></v-select>
                     <p>金額 (※単価を記入)</p>
                     <v-text-field
-                    type="number"
-                    v-model="reqData.amount"
-                    :rules="[rules.required]"
-                    label=""
-                    prefix="¥"
-                    outlined
-                    required
+                        prepend-inner-icon="mdi-cash-multiple"
+                        type="number"
+                        v-model="reqData.amount"
+                        :rules="[rules.required]"
+                        label=""
+                        prefix="¥"
+                        outlined
+                        required
                     >
                     </v-text-field>
-                    <p>備考</p>
+                    <p>備考 (※任意)</p>
                     <v-textarea
                         v-model="reqData.remark"    
                         name="input-7-4"
