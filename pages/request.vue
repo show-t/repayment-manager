@@ -187,7 +187,7 @@ export default Vue.extend({
                 ids:[],
             },
             users:[],
-            endpoint: "https://script.google.com/macros/s/AKfycbzLSPfDaJBd85eoTZpptb3ceUvp34VQj_Y7nC7vNurczRiX7J3TR9AgabNQHoUIJKSr/exec",
+            //endpoint: "https://script.google.com/macros/s/AKfycbzLSPfDaJBd85eoTZpptb3ceUvp34VQj_Y7nC7vNurczRiX7J3TR9AgabNQHoUIJKSr/exec",
             dialogConfirm: false,
             dialogSuccess: false,
             valid: false,
@@ -203,7 +203,7 @@ export default Vue.extend({
         post:function(){
             var body:string = JSON.stringify(this.reqData)
             var params ={headers:{'Content-Type':'text/plain'}}
-            axios.post(this.endpoint,body,params)
+            axios.post(this.$config.GAS_ENDPOINT,body,params)
                 .then(res=>{
                     console.log(res.data)
                     this.resData.ids = res.data
@@ -219,7 +219,7 @@ export default Vue.extend({
         }
     },
     created(){
-        axios.get(this.endpoint)
+        axios.get(this.$config.GAS_ENDPOINT)
             .then(res=>this.users = res.data.users)
     },
     mounted(){
