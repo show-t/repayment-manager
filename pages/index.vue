@@ -4,6 +4,7 @@
       <v-btn @click="movePage(item.to)" block x-large>{{ item.name }}</v-btn>
       <br />
     </div>
+    <p>{{loggedIn}}</p>
   </div>
 </template>
 
@@ -17,6 +18,7 @@ export default Vue.extend({
         { name: "立替金支払い完了報告", to: "/report" },
         { name: "精算リストをみる", to: "/view" },
       ],
+      loggedIn:false,
     };
   },
   methods: {
@@ -24,5 +26,12 @@ export default Vue.extend({
       this.$router.push(path);
     },
   },
+  created(){
+    liff.init({
+      liffId: this.$config.LIFF_ID
+    }).then(()=>{
+      this.loggedIn = liff.isLoggedIn()
+    })
+  }
 });
 </script>
