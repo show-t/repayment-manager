@@ -70,6 +70,8 @@
                                         </v-container>
                                     </v-list-item>
                                     <v-btn
+                                        :loading="loading"
+                                        :disabled="loading"
                                         color="indigo" 
                                         outlined 
                                         block
@@ -175,6 +177,7 @@ export default Vue.extend({
             total:0,
             dialogConfirm: false,
             dialogSuccess: false,
+            loading: false,
             align: 'center'
         }
     },
@@ -216,6 +219,7 @@ export default Vue.extend({
         },
         report:function(id:string){
             this.dialogConfirm = false
+            this.loading = true
             console.log(id)
             var url = this.$config.GAS_ENDPOINT
             var body:string = JSON.stringify({action:'paid', Id:id})
@@ -228,6 +232,9 @@ export default Vue.extend({
                         this.filterUserData()
                         this.dialogSuccess = true
                     }
+                })
+                .finally(()=>{
+                    this.loading = false
                 })
         },
         swapUser:function(){
