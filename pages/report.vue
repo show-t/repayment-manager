@@ -18,7 +18,7 @@
                                 @click="swapUser">
                                 <v-icon>mdi-swap-vertical-bold</v-icon>
                             </v-btn>
-                        </v-col>>
+                        </v-col>
                     </v-row>
                     <v-select
                         prepend-inner-icon="mdi-account-arrow-left"
@@ -81,19 +81,6 @@
                         </v-list>
                     </v-container>
                 </v-card>
-                
-                <!--
-                <v-data-table
-                    dense
-                    v-model="selected"
-                    :headers="headers"
-                    :items="records"
-                    :single-select=false
-                    :items-per-page="5"
-                    class="elevation-1"
-                    show-select
-                ></v-data-table>
-                -->
             </v-card>
         </v-app>
 </template>
@@ -106,7 +93,6 @@ export default Vue.extend({
             fromUser:'',
             toUser:'',
             records:[],
-            selected:[],
             resData:{
                 users:[],
                 list:{
@@ -117,7 +103,6 @@ export default Vue.extend({
                     datas:[]
                 },
             },
-            headers: [] as any,
             total:0,
             align: 'center'
         }
@@ -130,15 +115,6 @@ export default Vue.extend({
                 console.log(res)
                 this.resData.users = res.data.users
                 this.resData.list= res.data.list
-                
-                this.headers = (this.resData.list.regends.ja).reduce((acc:any, v:string,i:number) => {
-                    return [...acc, 
-                        {
-                            text: v, 
-                            value: (this.resData.list.regends.en)[i]
-                        }
-                    ]
-                }, []);
             })
     },
     methods:{
@@ -169,6 +145,17 @@ export default Vue.extend({
         },
         report:function(id:string){
             console.log(id)
+            var url = this.$config.GAS_ENDPOINT
+            var body:string = JSON.stringify({action:'paid', Id:id})
+            var params ={headers:{'Content-Type':'text/plain'}}
+            axios.post(url,body,params)
+                .then(res=>{
+                    console.log(res)
+                    if(res.data.success == true){
+                        this.paid(id)
+                        this.filterUserData()
+                    }
+                })
         },
         swapUser:function(){
             var temp:string
@@ -179,8 +166,8 @@ export default Vue.extend({
         },
         paid:function(id:string){
             this.resData.list.datas.map((v:any)=>{
-                if(v.Id == id){
-                    v.Paid = true
+                if(v[this.getIndexEn('Id')] == id){
+                    v[this.getIndexEn('Paid')] = true
                 }
             })
         }

@@ -201,7 +201,7 @@ export default Vue.extend({
             }
         },
         post:function(){
-            var body:string = JSON.stringify(this.reqData)
+            var body:string = JSON.stringify({action:'regist' ,...this.reqData})
             var params ={headers:{'Content-Type':'text/plain'}}
             axios.post(this.$config.GAS_ENDPOINT,body,params)
                 .then(res=>{
