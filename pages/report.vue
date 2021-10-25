@@ -66,7 +66,7 @@
                                             <v-row><v-col>【立替日】</v-col><v-col>{{record.Date}}</v-col></v-row>
                                             <v-row><v-col>【内　容】</v-col><v-col>{{record.Contents}}</v-col></v-row>
                                             <v-row><v-col>【金　額】</v-col><v-col>¥{{record.Amount}}</v-col></v-row>
-                                            <v-row><v-col>【備　考】</v-col><v-col>{{record.remark}}</v-col></v-row>
+                                            <v-row><v-col>【備　考】</v-col><v-col>{{record.Remark}}</v-col></v-row>
                                         </v-container>
                                     </v-list-item>
                                     <v-btn
