@@ -1,0 +1,194 @@
+<template>
+        <v-app>
+            <v-card>
+                <v-container>
+                    <v-select
+                        prepend-inner-icon="mdi-account-arrow-right"
+                        v-model="fromUser"
+                        :items="resData.users"
+                        label="FROM"
+                        outlined
+                        @change="filterUserData"
+                    ></v-select>
+                    <v-row>
+                        <v-col  :align="align" :align-self="align">
+                            <v-btn 
+                                outlined
+                                class="d-flex justify-space-between mb-6"
+                                @click="swapUser">
+                                <v-icon>mdi-swap-vertical-bold</v-icon>
+                            </v-btn>
+                        </v-col>>
+                    </v-row>
+                    <v-select
+                        prepend-inner-icon="mdi-account-arrow-left"
+                        v-model="toUser"
+                        :items="resData.users"
+                        label="TO"
+                        outlined
+                        @change="filterUserData"
+                    ></v-select>
+                </v-container>
+                <v-divider></v-divider>
+                <v-container>
+                    <v-text-field 
+                        class="right-input"
+                        outlined 
+                        readonly 
+                        prefix="¥" 
+                        v-model="total"
+                        label="総支払い額"
+                    ></v-text-field>
+                </v-container> 
+                <v-divider></v-divider>
+                <v-spacer></v-spacer>
+                <v-card>
+                    <v-container>
+                        {{records.length}}件の支払いがあります
+                        <v-list>
+                            <v-list-group
+                                v-for="record in records"
+                                :key="record.Id"
+                            >
+                                <template v-slot:activator>
+                                    <v-list-item-content>
+                                        <v-list-item-title color="primary">
+                                            <v-row>
+                                                <v-col>{{record.Id}}</v-col>
+                                                <v-col>¥{{record.Amount}}</v-col>
+                                            </v-row>
+                                        </v-list-item-title>
+                                    </v-list-item-content>
+                                </template>
+                                <v-card> 
+                                    <v-list-item>
+                                        <v-container>
+                                            <v-row><v-col>【立替日】</v-col><v-col>{{record.Date}}</v-col></v-row>
+                                            <v-row><v-col>【内　容】</v-col><v-col>{{record.Contents}}</v-col></v-row>
+                                            <v-row><v-col>【金　額】</v-col><v-col>¥{{record.Amount}}</v-col></v-row>
+                                            <v-row><v-col>【備　考】</v-col><v-col>{{record.remark}}</v-col></v-row>
+                                        </v-container>
+                                    </v-list-item>
+                                    <v-btn 
+                                        color="indigo" 
+                                        outlined 
+                                        block
+                                        @click="report(record.Id)"
+                                        >送ったよ!</v-btn>
+                                    <v-spacer></v-spacer>
+                                </v-card>
+                            </v-list-group>
+                        </v-list>
+                    </v-container>
+                </v-card>
+                
+                <!--
+                <v-data-table
+                    dense
+                    v-model="selected"
+                    :headers="headers"
+                    :items="records"
+                    :single-select=false
+                    :items-per-page="5"
+                    class="elevation-1"
+                    show-select
+                ></v-data-table>
+                -->
+            </v-card>
+        </v-app>
+</template>
+<script lang="ts">
+import Vue from 'vue'
+import axios from 'axios'
+export default Vue.extend({
+    data(){
+        return {
+            fromUser:'',
+            toUser:'',
+            records:[],
+            selected:[],
+            resData:{
+                users:[],
+                list:{
+                    regends:{
+                        ja:[],
+                        en:[]
+                    },
+                    datas:[]
+                },
+            },
+            headers: [] as any,
+            total:0,
+            align: 'center'
+        }
+    },
+    created(){
+        var url = this.$config.GAS_ENDPOINT + '?info=users,list'
+        console.log(url)
+        axios.get(url)
+            .then(res=>{
+                console.log(res)
+                this.resData.users = res.data.users
+                this.resData.list= res.data.list
+                
+                this.headers = (this.resData.list.regends.ja).reduce((acc:any, v:string,i:number) => {
+                    return [...acc, 
+                        {
+                            text: v, 
+                            value: (this.resData.list.regends.en)[i]
+                        }
+                    ]
+                }, []);
+            })
+    },
+    methods:{
+        filterUserData:function(){
+            var records:any[] = this.resData.list.datas.filter(v=>{
+                return (
+                    (v[this.getIndexEn('Target')] == this.fromUser)&&
+                    (v[this.getIndexEn('Repayer')] == this.toUser)&&
+                    (v[this.getIndexEn('Paid')] == false)
+                )
+            })
+            this.records = records.reduce((acc1:any,record:any[])=>{
+                return [...acc1,
+                    record.reduce((acc2:any,field:any,idx:number)=>{
+                        return {
+                            ...acc2,
+                            ...{[(this.resData.list.regends.en)[idx]]:field}
+                        }
+                    },{})
+                ]
+            },[])
+            this.total = this.records.reduce((acc:any,record:any)=>{
+                return acc + record.Amount
+            },0)
+        },
+        getIndexEn:function(regend :string){
+            return (this.resData.list.regends.en as string[]).indexOf(regend);
+        },
+        report:function(id:string){
+            console.log(id)
+        },
+        swapUser:function(){
+            var temp:string
+            temp = this.fromUser
+            this.fromUser = this.toUser
+            this.toUser = temp
+            this.filterUserData()
+        },
+        paid:function(id:string){
+            this.resData.list.datas.map((v:any)=>{
+                if(v.Id == id){
+                    v.Paid = true
+                }
+            })
+        }
+    }
+})
+</script>
+<style>
+    .right-input input {
+        text-align: right;
+      }
+</style>
