@@ -69,19 +69,88 @@
                                             <v-row><v-col>【備　考】</v-col><v-col>{{record.remark}}</v-col></v-row>
                                         </v-container>
                                     </v-list-item>
-                                    <v-btn 
+                                    <v-btn
                                         color="indigo" 
                                         outlined 
                                         block
                                         @click="report(record.Id)"
-                                        >送ったよ!</v-btn>
+                                    >
+                                        送ったよ!
+                                    </v-btn>
+                                    <!--
+                                    <v-dialog v-model="dialogConfirm">
+                                        <template v-slot:activator="{on,attrs}">
+                                            <v-btn
+                                                color="indigo" 
+                                                outlined 
+                                                block
+                                                v-bind="attrs"
+                                                v-on="on"
+                                            >
+                                                送ったよ!
+                                            </v-btn>
+                                        </template>
+                                        <v-card>
+                                            <v-card-title class="text-h5 grey lighten-2">
+                                                送信確認
+                                            </v-card-title>
+                                            <v-card-text>
+                                                <v-container>
+                                                    <v-row><v-col> ID:【{{record.Id}}】を支払い済み報告します</v-col></v-row>
+                                                </v-container>
+                                            </v-card-text>
+                                            <v-divider></v-divider>
+                                            <v-card-actions>
+                                                <v-spacer></v-spacer>
+                                                <v-btn
+                                                    color="primary"
+                                                    text
+                                                    @click="report(record.Id)"
+                                                >
+                                                    OK
+                                                </v-btn>
+                                                <v-btn
+                                                    text
+                                                    color="primary"
+                                                    @click="dialogConfirm = false"
+                                                >
+                                                    Cancel
+                                                </v-btn>
+                                            </v-card-actions>
+                                        </v-card>
+                                    </v-dialog>
+                                    -->
                                     <v-spacer></v-spacer>
                                 </v-card>
+                                
                             </v-list-group>
                         </v-list>
                     </v-container>
                 </v-card>
             </v-card>
+            <v-dialog v-model="dialogSuccess">
+                <v-card>
+                        <v-card-title class="text-h5 grey lighten-2">
+                            更新完了
+                        </v-card-title>
+                        <v-card-text>
+                            <v-container>
+                                <v-row><v-col>更新処理が完了しました</v-col></v-row>
+                            </v-container>
+                        </v-card-text>
+                        <v-divider></v-divider>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn
+                                text
+                                color="primary"
+                                @click="dialogSuccess = false"
+                            >
+                                OK
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+            </v-dialog>
         </v-app>
 </template>
 <script lang="ts">
@@ -104,6 +173,8 @@ export default Vue.extend({
                 },
             },
             total:0,
+            dialogConfirm: false,
+            dialogSuccess: false,
             align: 'center'
         }
     },
@@ -144,6 +215,7 @@ export default Vue.extend({
             return (this.resData.list.regends.en as string[]).indexOf(regend);
         },
         report:function(id:string){
+            this.dialogConfirm = false
             console.log(id)
             var url = this.$config.GAS_ENDPOINT
             var body:string = JSON.stringify({action:'paid', Id:id})
@@ -154,6 +226,7 @@ export default Vue.extend({
                     if(res.data.success == true){
                         this.paid(id)
                         this.filterUserData()
+                        this.dialogSuccess = true
                     }
                 })
         },
