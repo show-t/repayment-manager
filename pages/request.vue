@@ -219,7 +219,9 @@ export default Vue.extend({
         }
     },
     created(){
-        axios.get(this.$config.GAS_ENDPOINT)
+        var url = this.$config.GAS_ENDPOINT + '?info=users'
+        console.log(url)
+        axios.get(url)
             .then(res=>this.users = res.data.users)
     },
     mounted(){
