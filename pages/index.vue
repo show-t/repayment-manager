@@ -5,6 +5,7 @@
       <br />
     </div>
     <p>{{ loggedIn }}</p>
+    <p v-if="loggedIn">{{context}}</p>
     <v-btn @click="send">テストメッセージ</v-btn>
     <!--
     <div v-if="loggedIn" class="card">
@@ -40,27 +41,12 @@ export default Vue.extend({
         { name: "精算リストをみる", to: "/view" },
       ],
       loggedIn: false,
-      userId: "",
-      displayName: "",
-      pictureUrl: "https://bulma.io/images/placeholders/128x128.png",
-      statusMessage: "",
+      context:{}
     };
   },
   methods: {
     movePage: function (path: string) {
       this.$router.push(path);
-    },
-    getProfile(){
-      liff.getProfile()
-        .then(profile=>{
-          this.userId = profile.userId
-          this.displayName = profile.displayName
-          this.pictureUrl = profile.pictureUrl
-          this.statusMessage = profile.statusMessage
-        })
-        .catch(function(error) {
-          //alert('Error getting profile: ' + error)
-        })
     },
     send:function(){
       liff.sendMessages([
@@ -84,6 +70,7 @@ export default Vue.extend({
       })
       .then(() => {
         this.loggedIn = liff.isLoggedIn();
+        this.context = liff.getContext();
       });
   },
   mounted(){
