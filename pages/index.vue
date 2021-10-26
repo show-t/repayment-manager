@@ -41,8 +41,7 @@ export default Vue.extend({
       var body: any = JSON.stringify({
         toId: toId,
         messages:[
-          "メッセージ送信",
-          "テスト"
+          "#00013",
         ]
       });
       

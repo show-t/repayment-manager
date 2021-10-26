@@ -266,6 +266,7 @@ export default Vue.extend({
     },
     notice: function (ids: string[]) {
       const url = this.$config.LINEBOT_ENDPOINT + "/send_report";
+      console.log(url)
       const params = { headers: { "Content-Type": "text/plain" } };
       const context = liff.getContext();
 
