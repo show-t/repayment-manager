@@ -259,7 +259,7 @@ export default Vue.extend({
 
       var body: any = JSON.stringify({
         toId: toId,
-        messages: ids,
+        messages: messages,
       });
 
       if (toId != null) {
