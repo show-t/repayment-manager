@@ -161,7 +161,6 @@
 <script lang="ts">
 import Vue from "vue";
 import axios from "axios";
-import { LIFFMessage } from "liff-type";
 export default Vue.extend({
   data() {
     return {
@@ -186,6 +185,14 @@ export default Vue.extend({
     };
   },
   created() {
+    liff
+      .init({
+        liffId: this.$config.LIFF_ID,
+      })
+      .then(() => {
+        console.log("LIFF INIT!");
+      });
+
     var url = this.$config.GAS_ENDPOINT + "?info=users,list";
     console.log(url);
     axios.get(url).then((res) => {
@@ -257,8 +264,8 @@ export default Vue.extend({
         }
       });
     },
-    notice: function (ids:string[]) {
-      const url =this.$config.LINEBOT_ENDPOINT + "/send_report";
+    notice: function (ids: string[]) {
+      const url = this.$config.LINEBOT_ENDPOINT + "/send_report";
       const params = { headers: { "Content-Type": "text/plain" } };
       const context = liff.getContext();
 

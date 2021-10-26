@@ -4,29 +4,7 @@
       <v-btn @click="movePage(item.to)" block x-large>{{ item.name }}</v-btn>
       <br />
     </div>
-    <p>{{ loggedIn }}</p>
-    <p v-if="loggedIn">{{ context }}</p>
     <v-btn @click="send">テストメッセージ</v-btn>
-    <!--
-    <div v-if="loggedIn" class="card">
-      <div class="card-content">
-        <div class="media">
-          <div class="media-left">
-            <figure class="image is-48x48">
-              <img :src="pictureUrl" />
-            </figure>
-          </div>
-          <div class="media-content">
-            <p class="title is-4">{{ displayName }}</p>
-            <p class="subtitle is-6">@{{ userId }}</p>
-          </div>
-        </div>
-        <div class="content">
-          {{ statusMessage }}
-        </div>
-      </div>
-    </div>
-    -->
   </div>
 </template>
 
@@ -41,8 +19,6 @@ export default Vue.extend({
         { name: "立替金支払い完了報告", to: "/report" },
         { name: "精算リストをみる", to: "/view" },
       ],
-      loggedIn: false,
-      context: {},
     };
   },
   methods: {
@@ -88,8 +64,6 @@ export default Vue.extend({
         liffId: this.$config.LIFF_ID,
       })
       .then(() => {
-        this.loggedIn = liff.isLoggedIn();
-        this.context = liff.getContext();
       });
   },
   mounted() {
