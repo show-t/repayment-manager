@@ -84,7 +84,8 @@ export default {
   },
   publicRuntimeConfig: {
     LIFF_ID: process.env.VUE_APP_LIFF_ID,
-    GAS_ENDPOINT: process.env.VUE_APP_GAS_ENDPOINT
+    GAS_ENDPOINT: process.env.VUE_APP_GAS_ENDPOINT,
+    LINEBOT_ENDPOINT: process.env.VUE_APP_LINEBOT_ENDPOINT
   },
   privateRuntimeConfig: {
   }

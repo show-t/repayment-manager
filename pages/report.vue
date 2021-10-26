@@ -236,34 +236,11 @@ export default Vue.extend({
             this.paid(id);
             this.filterUserData();
             this.dialogSuccess = true;
-            this.sendMessage(id);
+            this.notice([id]);
           }
         })
         .finally(() => {
           this.loading = false;
-        });
-    },
-    sendMessage: function (id: string) {
-      var message:any = {
-        type: "text",
-        text: "$しはらい\n" + id,
-        emojis: [
-          {
-            index: 0,
-            productId: "5ac1bfd5040ab15980c9b435",
-            emojiId: "076",
-          },
-        ],
-      };
-      liff
-        .sendMessages([message])
-        .then(() => {
-          console.log("message sent");
-          //liff.closeWindow()
-        })
-        .catch((err) => {
-          console.log("Error:", err);
-          //liff.closeWindow()
         });
     },
     swapUser: function () {
@@ -279,6 +256,34 @@ export default Vue.extend({
           v[this.getIndexEn("Paid")] = true;
         }
       });
+    },
+    notice: function (ids:string[]) {
+      const url =this.$config.LINEBOT_ENDPOINT + "/send_report";
+      const params = { headers: { "Content-Type": "text/plain" } };
+      const context = liff.getContext();
+
+      const toId =
+        context.type == "utou"
+          ? context.userId
+          : context.type == "group"
+          ? context.groupId
+          : null;
+
+      var body: any = JSON.stringify({
+        toId: toId,
+        messages: ids,
+      });
+
+      if (toId != null) {
+        axios
+          .post(url, body, params)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log("Error:", err);
+          });
+      }
     },
   },
 });
