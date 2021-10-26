@@ -235,10 +235,34 @@ export default Vue.extend({
             this.paid(id);
             this.filterUserData();
             this.dialogSuccess = true;
+            this.sendMessage(id);
           }
         })
         .finally(() => {
           this.loading = false;
+        });
+    },
+    sendMessage: function (id: string) {
+      var message:any = {
+        type: "text",
+        text: "$しはらい\n" + id,
+        emojis: [
+          {
+            index: 0,
+            productId: "5ac1bfd5040ab15980c9b435",
+            emojiId: "076",
+          },
+        ],
+      };
+      liff
+        .sendMessages([message])
+        .then(() => {
+          console.log("message sent");
+          //liff.closeWindow()
+        })
+        .catch((err) => {
+          console.log("Error:", err);
+          //liff.closeWindow()
         });
     },
     swapUser: function () {

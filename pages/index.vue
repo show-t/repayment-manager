@@ -5,6 +5,7 @@
       <br />
     </div>
     <p>{{ loggedIn }}</p>
+    <v-btn @click="send">テストメッセージ</v-btn>
     <!--
     <div v-if="loggedIn" class="card">
       <div class="card-content">
@@ -60,6 +61,20 @@ export default Vue.extend({
         .catch(function(error) {
           //alert('Error getting profile: ' + error)
         })
+    },
+    send:function(){
+      liff.sendMessages([
+        {
+          type: 'text',
+          text: 'てすと'
+        }
+      ]).then(()=>{
+        console.log('message sent')
+        //liff.closeWindow()
+      }).catch((err)=>{
+        console.log('Error:', err)
+          //liff.closeWindow()
+      })
     }
   },
   created() {
@@ -72,7 +87,7 @@ export default Vue.extend({
       });
   },
   mounted(){
-    this.getProfile()
+    //this.getProfile()
   }
 });
 </script>
