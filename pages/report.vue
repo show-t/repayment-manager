@@ -248,10 +248,12 @@ export default Vue.extend({
 
       var messages = records.map((record) => {
         var msg = "【" + record[0] + "】\n";
-        msg += "FROM: @" + record[4] + "\n";
-        msg += "TO  : @" + record[3] + "\n";
+        msg += "@" + record[4] + " から ";
+        msg += "@" + record[3] + " へ\n";
         msg += "¥" + record[5] + "\n";
-        msg += record[2];
+        msg += "の支払いが完了しました。\n"
+        msg += "[MEMO]\n"
+        msg += record[2] +"\n";
         return msg;
       });
 
