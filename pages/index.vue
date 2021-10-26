@@ -5,7 +5,7 @@
       <br />
     </div>
     <p>{{ loggedIn }}</p>
-    <p v-if="loggedIn">{{context}}</p>
+    <p v-if="loggedIn">{{ context }}</p>
     <v-btn @click="send">テストメッセージ</v-btn>
     <!--
     <div v-if="loggedIn" class="card">
@@ -32,6 +32,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import axios from "axios";
 export default Vue.extend({
   data: function () {
     return {
@@ -41,27 +42,45 @@ export default Vue.extend({
         { name: "精算リストをみる", to: "/view" },
       ],
       loggedIn: false,
-      context:{}
+      context: {},
     };
   },
   methods: {
     movePage: function (path: string) {
       this.$router.push(path);
     },
-    send:function(){
-      liff.sendMessages([
-        {
-          type: 'text',
-          text: 'てすと'
-        }
-      ]).then(()=>{
-        console.log('message sent')
-        //liff.closeWindow()
-      }).catch((err)=>{
-        console.log('Error:', err)
-          //liff.closeWindow()
-      })
-    }
+    send: function () {
+      const url =
+        "https://us-central1-linebot-a96af.cloudfunctions.net/send_report";
+      const params = { headers: { "Content-Type": "text/plain" } };
+      const context = liff.getContext();
+
+      const toId =
+        context.type == "utou"
+          ? context.userId
+          : context.type == "group"
+          ? context.groupId
+          : null;
+
+      var body: any = JSON.stringify({
+        toId: toId,
+        messages:[
+          "メッセージ送信",
+          "テスト"
+        ]
+      });
+      
+      if (toId != null) {
+        axios
+          .post(url, body, params)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log("Error:", err);
+          });
+      }
+    },
   },
   created() {
     liff
@@ -73,8 +92,8 @@ export default Vue.extend({
         this.context = liff.getContext();
       });
   },
-  mounted(){
+  mounted() {
     //this.getProfile()
-  }
+  },
 });
 </script>
