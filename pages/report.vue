@@ -252,8 +252,8 @@ export default Vue.extend({
         msg += "@" + record[3] + " へ\n";
         msg += "¥" + record[5] + "\n";
         msg += "の支払いが完了しました。\n"
-        msg += "[MEMO]\n"
-        msg += record[2] +"\n";
+        msg += "\n[MEMO]\n"
+        msg += record[2];
         return msg;
       });
 
