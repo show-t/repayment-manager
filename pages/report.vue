@@ -89,49 +89,6 @@
                 >
                   送ったよ!
                 </v-btn>
-                <!--
-                                    <v-dialog v-model="dialogConfirm">
-                                        <template v-slot:activator="{on,attrs}">
-                                            <v-btn
-                                                color="indigo" 
-                                                outlined 
-                                                block
-                                                v-bind="attrs"
-                                                v-on="on"
-                                            >
-                                                送ったよ!
-                                            </v-btn>
-                                        </template>
-                                        <v-card>
-                                            <v-card-title class="text-h5 grey lighten-2">
-                                                送信確認
-                                            </v-card-title>
-                                            <v-card-text>
-                                                <v-container>
-                                                    <v-row><v-col> ID:【{{record.Id}}】を支払い済み報告します</v-col></v-row>
-                                                </v-container>
-                                            </v-card-text>
-                                            <v-divider></v-divider>
-                                            <v-card-actions>
-                                                <v-spacer></v-spacer>
-                                                <v-btn
-                                                    color="primary"
-                                                    text
-                                                    @click="report(record.Id)"
-                                                >
-                                                    OK
-                                                </v-btn>
-                                                <v-btn
-                                                    text
-                                                    color="primary"
-                                                    @click="dialogConfirm = false"
-                                                >
-                                                    Cancel
-                                                </v-btn>
-                                            </v-card-actions>
-                                        </v-card>
-                                    </v-dialog>
-                                    -->
                 <v-spacer></v-spacer>
               </v-card>
             </v-list-group>
@@ -156,6 +113,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <p>{{loggedIn}}</p>
   </v-app>
 </template>
 <script lang="ts">
@@ -182,6 +140,7 @@ export default Vue.extend({
       dialogSuccess: false,
       loading: false,
       align: "center",
+      loggedIn :false
     };
   },
   created() {
@@ -191,6 +150,7 @@ export default Vue.extend({
       })
       .then(() => {
         console.log("LIFF INIT!");
+        this.loggedIn = liff.isLoggedIn()
       });
 
     var url = this.$config.GAS_ENDPOINT + "?info=users,list";
@@ -231,7 +191,6 @@ export default Vue.extend({
     report: function (id: string) {
       this.dialogConfirm = false;
       this.loading = true;
-      console.log(id);
       var url = this.$config.GAS_ENDPOINT;
       var body: string = JSON.stringify({ action: "paid", Id: id });
       var params = { headers: { "Content-Type": "text/plain" } };
@@ -266,9 +225,10 @@ export default Vue.extend({
     },
     notice: function (ids: string[]) {
       const url = this.$config.LINEBOT_ENDPOINT + "/send_report";
-      console.log(url)
+      console.log(url);
       const params = { headers: { "Content-Type": "text/plain" } };
       const context = liff.getContext();
+      console.log(context);
 
       const toId =
         context.type == "utou"
@@ -276,6 +236,26 @@ export default Vue.extend({
           : context.type == "group"
           ? context.groupId
           : null;
+
+      console.log(toId);
+
+      var datas: any = this.resData.list.datas;
+      var records = ids.map((id) => {
+        return datas.reduce((acc: any, v: any) => {
+          return v[0] == id ? v : acc;
+        }, []);
+      });
+
+      var messages = records.map((record) => {
+        var msg = "【" + record[0] + "】\n";
+        msg += "FROM: @" + record[4] + "\n";
+        msg += "TO  : @" + record[3] + "\n";
+        msg += "¥" + record[5] + "\n";
+        msg += record[2];
+        return msg;
+      });
+
+      console.log(messages);
 
       var body: any = JSON.stringify({
         toId: toId,
