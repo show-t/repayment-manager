@@ -201,6 +201,7 @@ export default Vue.extend({
           console.log(res.data);
           this.resData.ids = res.data;
           this.dialogSuccess = true;
+          this.notice(this.resData.ids)
           this.clearReqData();
         })
         .catch((err) => {
@@ -209,6 +210,51 @@ export default Vue.extend({
     },
     clearReqData() {
       (this.$refs.form as any).reset();
+    },
+    notice: function (ids: string[]) {
+      const url = "https://us-central1-linebot-a96af.cloudfunctions.net/send_request";
+      console.log(url);
+      const params = { headers: { "Content-Type": "text/plain" } };
+      const context = liff.getContext();
+      console.log(context);
+
+      const toId =
+        context.type == "utou"
+          ? context.userId
+          : context.type == "group"
+          ? context.groupId
+          : null;
+
+      console.log(toId);
+
+      var messages = this.reqData.targets.map((target) => {
+        var msg = "";
+        msg += "@" + this.reqData.repayer + " が ";
+        msg += "@" + target + " に\n";
+        msg += "¥" + this.reqData.amount + "\n";
+        msg += "の送金をリクエストしました。\n"
+        msg += "\n[MEMO]\n"
+        msg += this.reqData.contents;
+        return msg;
+      });
+
+      console.log(messages);
+
+      var body: any = JSON.stringify({
+        toId: toId,
+        messages: messages,
+      });
+
+      if (toId != null) {
+        axios
+          .post(url, body, params)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log("Error:", err);
+          });
+      }
     },
   },
   created() {
