@@ -5,6 +5,7 @@
       <br />
     </div>
     <p>{{ loggedIn }}</p>
+    <!--
     <div v-if="loggedIn" class="card">
       <div class="card-content">
         <div class="media">
@@ -23,6 +24,7 @@
         </div>
       </div>
     </div>
+    -->
   </div>
 </template>
 
