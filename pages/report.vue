@@ -113,7 +113,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <p>{{url}}</p>
   </v-app>
 </template>
 <script lang="ts">
