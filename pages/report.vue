@@ -113,7 +113,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <p>{{loggedIn}}</p>
   </v-app>
 </template>
 <script lang="ts">
@@ -140,19 +139,9 @@ export default Vue.extend({
       dialogSuccess: false,
       loading: false,
       align: "center",
-      loggedIn :false
     };
   },
   created() {
-    liff
-      .init({
-        liffId: this.$config.LIFF_ID,
-      })
-      .then(() => {
-        console.log("LIFF INIT!");
-        this.loggedIn = liff.isLoggedIn()
-      });
-
     var url = this.$config.GAS_ENDPOINT + "?info=users,list";
     console.log(url);
     axios.get(url).then((res) => {
@@ -224,7 +213,7 @@ export default Vue.extend({
       });
     },
     notice: function (ids: string[]) {
-      const url = "https://us-central1-linebot-a96af.cloudfunctions.net/send_report";
+      const url = this.$config.LINEBOT_ENDPOINT + "/send_report"
       console.log(url);
       const params = { headers: { "Content-Type": "text/plain" } };
       const context = liff.getContext();
@@ -251,8 +240,8 @@ export default Vue.extend({
         msg += "@" + record[4] + " から ";
         msg += "@" + record[3] + " へ\n";
         msg += "¥" + record[5] + "\n";
-        msg += "の支払いが完了しました。\n"
-        msg += "\n[MEMO]\n"
+        msg += "の支払いが完了しました。\n";
+        msg += "\n[MEMO]\n";
         msg += record[2];
         return msg;
       });

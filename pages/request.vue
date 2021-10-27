@@ -212,7 +212,7 @@ export default Vue.extend({
       (this.$refs.form as any).reset();
     },
     notice: function (ids: string[]) {
-      const url = "https://us-central1-linebot-a96af.cloudfunctions.net/send_request";
+      const url = this.$config.LINEBOT_ENDPOINT + "/send_request"
       console.log(url);
       const params = { headers: { "Content-Type": "text/plain" } };
       const context = liff.getContext();
