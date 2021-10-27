@@ -113,6 +113,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <p>{{url}}</p>
   </v-app>
 </template>
 <script lang="ts">
@@ -139,6 +140,7 @@ export default Vue.extend({
       dialogSuccess: false,
       loading: false,
       align: "center",
+      url:''
     };
   },
   created() {
@@ -214,6 +216,7 @@ export default Vue.extend({
     },
     notice: function (ids: string[]) {
       const url = this.$config.LINEBOT_ENDPOINT + "/send_report"
+      this.url = url
       console.log(url);
       const params = { headers: { "Content-Type": "text/plain" } };
       const context = liff.getContext();
