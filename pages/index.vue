@@ -1,5 +1,5 @@
 <template>
-  <div v-if="logged">
+  <div v-if="loggedIn">
     <div v-for="item in menuItems" :key="item">
       <v-btn @click="movePage(item.to)" block x-large>{{ item.name }}</v-btn>
       <br />
@@ -27,7 +27,6 @@ export default Vue.extend({
     },
   },
   created() {
-    this.loggedIn = false
     liff
       .init({
         liffId: this.$config.LIFF_ID,
@@ -36,7 +35,7 @@ export default Vue.extend({
         if(!(liff.isInClient()||liff.isLoggedIn())){
           liff.login()
         }
-        this.loggedIn = true
+        this.loggedIn = true;
       });
   },
   mounted() {
