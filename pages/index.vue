@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="logged">
     <div v-for="item in menuItems" :key="item">
       <v-btn @click="movePage(item.to)" block x-large>{{ item.name }}</v-btn>
       <br />
@@ -18,6 +18,7 @@ export default Vue.extend({
         { name: "立替金支払い完了報告", to: "/report" },
         { name: "精算リストをみる", to: "/view" },
       ],
+      loggedIn: false,
     };
   },
   methods: {
@@ -26,6 +27,7 @@ export default Vue.extend({
     },
   },
   created() {
+    this.loggedIn = false
     liff
       .init({
         liffId: this.$config.LIFF_ID,
@@ -33,6 +35,7 @@ export default Vue.extend({
       .then(() => {
         if(!(liff.isInClient()||liff.isLoggedIn())){
           liff.login()
+          this.loggedIn = true
         }
       });
   },
