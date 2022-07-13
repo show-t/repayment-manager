@@ -31,6 +31,9 @@ export default Vue.extend({
         liffId: this.$config.LIFF_ID,
       })
       .then(() => {
+        if(!(liff.isInClient()||liff.isLoggedIn())){
+          liff.login()
+        }
       });
   },
   mounted() {
